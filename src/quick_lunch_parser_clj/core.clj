@@ -40,5 +40,6 @@
   (wrap-defaults handler api-defaults))
 
 (defn -main []
-  (let [port (env :port)]
-    (run-server #'ql-api {:port (read-string port) :join? false})))
+  (let [port (env :port)
+        join? (env :join?)]
+    (run-server #'ql-api {:port (read-string port) :join? join})))

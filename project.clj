@@ -5,8 +5,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.0.0"
   :uberjar-name "clojure-getting-started-standalone.jar"
-  :profiles {:production {:env {:port "80"}}
-             :dev {:env {:port "8080"}}}
+  :profiles {:production {:env {:port "80"
+                                :join? true}}
+             :dev {:env {:port "8080"
+                         :join? false}}}
   :plugins [[lein-environ "1.1.0"]]
   :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
                  [enlive "1.1.6"]
