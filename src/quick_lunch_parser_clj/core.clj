@@ -42,4 +42,4 @@
 (defn -main []
   (let [port (env :port)
         join? (env :join?)]
-    (run-server #'ql-api {:port (read-string port) :join? join})))
+    (run-server #'ql-api {:port (read-string port) :join? join?})))
