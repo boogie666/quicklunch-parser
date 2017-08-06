@@ -8,7 +8,8 @@
   :profiles {:production {:env {:port "80"
                                 :join? true}}
              :dev {:env {:port "8080"
-                         :join? false}}}
+                         :join? false}}
+             :uberjar {:aot :all}}
   :plugins [[lein-environ "1.1.0"]]
   :main quick-lunch-parser-clj.core
   :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
