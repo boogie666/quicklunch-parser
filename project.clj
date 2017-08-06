@@ -10,6 +10,7 @@
              :dev {:env {:port "8080"
                          :join? false}}}
   :plugins [[lein-environ "1.1.0"]]
+  :main quick-lunch-parser-clj.core
   :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
                  [enlive "1.1.6"]
                  [http-kit "2.1.18"]
