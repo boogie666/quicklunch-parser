@@ -9,6 +9,7 @@
             [ring.util.response :as r]
             [environ.core :refer [env]]
             [cognitect.transit :as transit]
+            [clojure.pprint :as pp]
             [org.httpkit.server :refer [run-server]]))
 
 
@@ -23,7 +24,7 @@
 
 (defn pritty-print-to-string [x]
   (let [out (java.io.StringWriter.)]
-    (clojure.pprint/pprint x out)
+    (pp/pprint x out)
     (.toString out)))
 
 (def ql-cache
