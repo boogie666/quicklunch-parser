@@ -35,7 +35,7 @@
     (if (cache/has? @ql-cache current-week)
       (let [updated-cache (swap! ql-cache #(cache/hit % current-week))]
         (get updated-cache current-week))
-      (let [fresh-data (-> "http://www.quick-lunch.ro/meniu_curent2.php"
+      (let [fresh-data (-> (env :ql-endpoint)
                            (p/get-dom!)
                            (p/parse-quick-lunch-data))
             updated-cache (swap! ql-cache #(cache/miss % current-week fresh-data))]
@@ -70,7 +70,7 @@
                      :server-port    8080
                      :server-name    "blah"
                      :remote-addr    "localhost"
-                     :uri            "/transit"
+                     :uri            "/clj-pritty"
                      :request-method :get
                      :headers        {"host" "localhost:8080"}}))))
 

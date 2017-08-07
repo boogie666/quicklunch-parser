@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.0.0"
   :uberjar-name "clojure-getting-started-standalone.jar"
+  :env {:ql-endpoint "http://www.quick-lunch.ro/meniu_curent2.php"}
   :profiles {:production {:env {:port "80"
                                 :join? "true"}}
              :dev {:env {:port "8080"
