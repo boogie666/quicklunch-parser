@@ -6,9 +6,9 @@
   :min-lein-version "2.0.0"
   :uberjar-name "clojure-getting-started-standalone.jar"
   :profiles {:production {:env {:port "80"
-                                :join? true}}
+                                :join? "true"}}
              :dev {:env {:port "8080"
-                         :join? false}}
+                         :join? "false"}}
              :uberjar {:aot :all}}
   :plugins [[lein-environ "1.1.0"]]
   :main quick-lunch-parser-clj.core
@@ -21,4 +21,5 @@
                  [ring/ring-defaults "0.3.1"]
                  [environ "1.1.0"]
                  [javax.servlet/servlet-api "2.5"]
+                 [com.cognitect/transit-clj "0.8.300"]
                  [org.clojure/core.cache "0.6.5"]])

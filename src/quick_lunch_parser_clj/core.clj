@@ -1,14 +1,30 @@
 (ns quick-lunch-parser-clj.core
+  (:import (java.io ByteArrayOutputStream))
   (:require [quick-lunch-parser-clj.parser :as p]
             [quick-lunch-parser-clj.utils :as u]
             [clojure.core.cache :as cache]
             [compojure.route :as route :refer [files not-found]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
-            [compojure.core :refer [defroutes GET POST DELETE ANY context]]
+            [compojure.core :refer [defroutes GET ANY]]
             [ring.util.response :as r]
             [environ.core :refer [env]]
+            [cognitect.transit :as transit]
             [org.httpkit.server :refer [run-server]]))
 
+
+(defn write-string [x]
+  (let [baos (ByteArrayOutputStream.)
+        w (transit/writer baos :json)
+        _ (transit/write w x)
+        out (.toString baos)]
+    (.reset baos)
+    out))
+
+
+(defn pritty-print-to-string [x]
+  (let [out (java.io.StringWriter.)]
+    (clojure.pprint/pprint x out)
+    (.toString out)))
 
 (def ql-cache
   (atom (cache/ttl-cache-factory {} :ttl u/half-a-day)))
@@ -25,16 +41,37 @@
         (get updated-cache current-week)))))
 
 
-
 (defn splash []
   {:status 200
    :headers {"Content-Type" "text/plain"}
    :body "Hello from Heroku"})
 
+(defn formated-response [formatter]
+  (-> (r/response (formatter (get-quick-lunch-menu!)))
+      (r/header "Content-Type" "text/plain")))
+
 (defroutes handler
-  (GET "/menu" []
-    (-> (r/response (pr-str (get-quick-lunch-menu!)))
-        (r/header "Content-Type" "text/plain"))))
+  (GET "/transit" []
+    (formated-response write-string))
+
+  (GET "/clj" []
+    (formated-response pr-str))
+
+  (GET "/clj-pritty" []
+    (formated-response pritty-print-to-string))
+
+  (ANY "*" []
+    (r/not-found "Not found!")))
+
+(comment
+  (println
+    (:body (handler {:protocol       "HTTP/1.1"
+                     :server-port    8080
+                     :server-name    "blah"
+                     :remote-addr    "localhost"
+                     :uri            "/transit"
+                     :request-method :get
+                     :headers        {"host" "localhost:8080"}}))))
 
 (def ql-api
   (wrap-defaults handler api-defaults))
@@ -42,4 +79,4 @@
 (defn -main []
   (let [port (env :port)
         join? (env :join?)]
-    (run-server #'ql-api {:port (read-string port) :join? join?})))
+    (run-server #'ql-api {:port (read-string port) :join? (read-string join?)})))
